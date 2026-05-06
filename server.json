@@ -1,6 +1,6 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
-  "name": "io.github.MosslandOpenDevs/alpha-mcp",
+  "name": "land.moss/alpha-mcp",
   "title": "Alpha (Mossland)",
   "description": "Korean crypto × AI media MCP — channel stance, daily briefs, RAG, canonical store, AI personas.",
   "websiteUrl": "https://alpha.moss.land/developers",
