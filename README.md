@@ -1,8 +1,8 @@
 # Alpha MCP
 
-> **Korean crypto narratives + AI synthesis as MCP tools.** Plug Alpha into Claude, Cursor, Continue, Cline, Zed and ask about Korean YouTube channels, daily briefs, AI-synthesized stance distributions, and Mossland on-chain context.
+> **Korean crypto narratives + AI synthesis as MCP tools.** Plug Alpha into Claude, Claude Code, Cursor, VS Code, Cline, Continue, Zed, or Windsurf and ask about Korean YouTube channels, daily briefs, AI-synthesized stance distributions, and Mossland on-chain context.
 
-[![Smithery](https://img.shields.io/badge/Smithery-Listed-blue)](https://smithery.ai)
+[![MCP Registry](https://img.shields.io/badge/MCP_Registry-land.moss%2Falpha--mcp-blue)](https://registry.modelcontextprotocol.io/v0/servers?search=land.moss/alpha-mcp)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Alpha](https://img.shields.io/badge/Live-alpha.moss.land-purple)](https://alpha.moss.land/)
 
@@ -12,7 +12,7 @@ Alpha MCP is the official Model Context Protocol server for [Alpha by Mossland](
 https://alpha.moss.land/api/mcp
 ```
 
-JSON-RPC 2.0 over Streamable HTTP. Protocol version `2025-06-18`. Free, no auth, fair-use rate limit.
+JSON-RPC 2.0 over Streamable HTTP. Protocol version `2025-06-18`. Free, no auth, fair use (~1 req/sec).
 
 ---
 
@@ -35,7 +35,7 @@ Alpha aggregates that gap into a canonical store of **141 entities, 22 topics, 3
 | `get_today_brief` | AI-synthesized daily brief (YYYY-MM-DD or yesterday) |
 | `get_active_pulses` | Recent price/event signals (5-min window ≥1% movers) |
 | `get_macro_snapshot` | KR (BOK / ECOS) + US (FRED) macro indicators with deltas |
-| `get_connections` | Causal hypothesis edges between entity pairs |
+| `get_connections` | Causal-hypothesis links from one entity (by `entity_id`) to related entities |
 | `list_topics` | Full canonical topic list |
 | `list_events` | Full canonical event list |
 | `list_personas` | 8 disclosed AI personas + each persona's call track record |
@@ -49,19 +49,34 @@ Tool schemas are introspectable via standard MCP `tools/list`.
 
 ### Claude Desktop
 
-Edit `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) or `%APPDATA%\Claude\claude_desktop_config.json` (Windows):
+Claude Desktop's config file has no native remote-HTTP transport, so use one of these.
+
+**Custom Connector (recommended)** — Settings → Connectors → **Add custom connector**, then paste the URL:
+
+```
+https://alpha.moss.land/api/mcp
+```
+
+**Config file via the `mcp-remote` bridge** (needs Node.js) — edit `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) or `%APPDATA%\Claude\claude_desktop_config.json` (Windows), then fully quit and relaunch:
 
 ```json
 {
   "mcpServers": {
     "alpha": {
-      "url": "https://alpha.moss.land/api/mcp"
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://alpha.moss.land/api/mcp"]
     }
   }
 }
 ```
 
-Restart Claude Desktop. The `alpha` server should appear in the tools picker.
+### Claude Code
+
+```bash
+claude mcp add --transport http alpha https://alpha.moss.land/api/mcp
+```
+
+Add `--scope user` to make it available across all your projects.
 
 ### Cursor
 
@@ -71,8 +86,7 @@ Restart Claude Desktop. The `alpha` server should appear in the tools picker.
 {
   "mcpServers": {
     "alpha": {
-      "url": "https://alpha.moss.land/api/mcp",
-      "type": "http"
+      "url": "https://alpha.moss.land/api/mcp"
     }
   }
 }
@@ -86,8 +100,8 @@ Restart Claude Desktop. The `alpha` server should appear in the tools picker.
 {
   "mcpServers": {
     "alpha": {
-      "url": "https://alpha.moss.land/api/mcp",
-      "transportType": "http"
+      "type": "streamableHttp",
+      "url": "https://alpha.moss.land/api/mcp"
     }
   }
 }
@@ -95,16 +109,13 @@ Restart Claude Desktop. The `alpha` server should appear in the tools picker.
 
 ### Continue (VS Code / JetBrains)
 
-Add to your Continue config:
+Add to `config.yaml` (or drop a JSON file into `.continue/mcpServers/`):
 
-```json
-{
-  "experimental": {
-    "modelContextProtocolServers": [
-      { "transport": { "type": "http", "url": "https://alpha.moss.land/api/mcp" } }
-    ]
-  }
-}
+```yaml
+mcpServers:
+  - name: alpha
+    type: streamable-http
+    url: https://alpha.moss.land/api/mcp
 ```
 
 ### Zed
@@ -113,9 +124,36 @@ Add to your Continue config:
 {
   "context_servers": {
     "alpha": {
-      "settings": {},
-      "command": null,
       "url": "https://alpha.moss.land/api/mcp"
+    }
+  }
+}
+```
+
+### VS Code (Copilot agent mode)
+
+`.vscode/mcp.json` in your workspace (or run **MCP: Add Server** from the command palette):
+
+```json
+{
+  "servers": {
+    "alpha": {
+      "type": "http",
+      "url": "https://alpha.moss.land/api/mcp"
+    }
+  }
+}
+```
+
+### Windsurf
+
+`~/.codeium/windsurf/mcp_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "alpha": {
+      "serverUrl": "https://alpha.moss.land/api/mcp"
     }
   }
 }
@@ -160,11 +198,11 @@ curl -X POST https://alpha.moss.land/api/mcp \
 
 This repository is a thin client-config + docs layer. The actual server runs at `alpha.moss.land/api/mcp`, implemented in the (currently private) Alpha Next.js codebase. The reason it lives here is so that:
 
-- MCP catalog tools (Smithery, Glama, awesome-mcp-servers lists) have a canonical GitHub URL to reference,
+- MCP catalog tools (the official [MCP Registry](https://registry.modelcontextprotocol.io/), and lists like awesome-mcp-servers) have a canonical GitHub URL to reference,
 - users can star / watch updates for new tools,
 - the install flow has a stable home that doesn't rely on Alpha's product roadmap.
 
-**Free use policy**: no auth, no rate limit (within fair use). If you build on this, please cite Alpha (`alpha.moss.land/[route]`) inline. For partnerships or higher throughput, contact `contact@moss.land`.
+**Free use policy**: no auth and no enforced rate limit — fair use, please keep to roughly 1 req/sec. If you build on this, please cite Alpha (`alpha.moss.land/[route]`) inline. For partnerships or higher throughput, contact `contact@moss.land`.
 
 ## Citation policy
 
