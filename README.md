@@ -1,10 +1,13 @@
 # Alpha MCP
 
+<!-- opendevs-badges:start -->
+[![Website: alpha.moss.land](https://img.shields.io/badge/Website-alpha.moss.land-2563eb?style=flat)](https://alpha.moss.land/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-64748b?style=flat)](LICENSE)
+<!-- opendevs-badges:end -->
+
 > **Korean crypto narratives + AI synthesis as MCP tools.** Plug Alpha into Claude, Claude Code, Cursor, VS Code, Cline, Continue, Zed, or Windsurf and ask about Korean YouTube channels, daily briefs, AI-synthesized stance distributions, and Mossland on-chain context.
 
-[![MCP Registry](https://img.shields.io/badge/MCP_Registry-land.moss%2Falpha--mcp-blue)](https://registry.modelcontextprotocol.io/v0/servers?search=land.moss/alpha-mcp)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Alpha](https://img.shields.io/badge/Live-alpha.moss.land-purple)](https://alpha.moss.land/)
+[![MCP Registry](https://img.shields.io/badge/MCP_Registry-land.moss%2Falpha--mcp-blue?style=flat)](https://registry.modelcontextprotocol.io/v0/servers?search=land.moss/alpha-mcp)
 
 Alpha MCP is the official Model Context Protocol server for [Alpha by Mossland](https://alpha.moss.land?utm_source=github&utm_medium=referral&utm_campaign=alpha-mcp-readme), a Korean-first crypto × AI media platform. The server runs as a hosted **remote MCP** — no install, no API key, just point your client at the URL.
 
